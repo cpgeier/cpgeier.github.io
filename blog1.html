@@ -1,0 +1,45 @@
+<h1>100-1000 milliseconds of latency that would not go away</h1>
+
+<p>
+  Have you ever tried to optimize a system but found it just would not get any more consistent a side from a specific scenario? Did it seem like the stuff somehow got together and decided on how they could be delivered an spactacularly inconstent pattern, even on a local network connection?
+</p>
+
+<p> 
+  This happened to me recently. I had been trying to create a remote simple game server and I had started collecting important metrics for the application for latency, load, and saturation and all of that good stuff. I ended focusing on pings to connected devices as the key metric for the server. 
+</p>
+
+<p>
+  Upon doing that, I noticed that only specific devices would ping back consistently in less than 100 milliseconds, even if they were only the same network connection. The mysterious inconsistency kept appearing: 100 ms here, 500 ms there. No matter what I did, it would not go away.
+</p>
+
+<p>
+  Going back to basics lead me in the wrong direction but eventually turned up the solution. Ping my desktop from my laptop, 5 ms average. Fantastic. Ping my laptop from my desktop, 500 ms average. Uh oh. It was then I had a lesson on <a href="https://dot11zen.blogspot.com/2018/02/80211-power-management-with-packet.html">802.11 power saving</a>.
+</p>
+
+<p>
+  Oh yeah. Have you ever looked at 802.11 packets and noticed a power saving flag? That's why. When that flag is enabled, the station goes to sleep and messages are queued on your router. When the station wakes up, the router sends all of the queued messages so that the station doesn't have to maintain a connection. Unfortunately, in order to actually gather this up, it adds a certain amount of delay before flushing data to the device.
+</p>
+
+<p>
+  In this case, the interval when packets were pulled was a factor of the router beacon interval which is 100ms. In the name of keeping things running as quickly as possible, I'm planning on just sending a packet every 200ms to effectively negate the power saving feature in the name of latency.
+</p>
+
+<p>
+  Stuff like this just proves that you should always be checking your assumptions and trusting abstractions sometimes bites back.
+</p>
+
+<p>
+  Incidentally, if this kind of thing matters to you, I would suggest trying to capture 802.11 packets in Wireshark and playing around. There are a lot more flags and a lot protocols I had no idea existed so you might find another scenario like this just by looking at the messages! 
+</p>
+
+<p>
+  This post is a copy of <a href="https://rachelbythebay.com/w/2020/10/14/lag/">this magnificent post on rachelbythebay.com</a>. I felt like I was reliving the same experience her teammates shared and wanted to connect these stories together!
+</p>
+
+<p>
+  More details on power saving mode: <a href="https://dot11zen.blogspot.com/2018/02/80211-power-management-with-packet.html">https://dot11zen.blogspot.com/2018/02/80211-power-management-with-packet.html</a>
+</p>
+
+<p>
+  Note: Something interesting: the <a href="https://developer.android.com/reference/android/net/wifi/WifiManager#WIFI_MODE_FULL_LOW_LATENCY">WIFI_MODE_FULL_LOW_LATENCY</a> flag on Android basically just disables this power saving feature according to <a href="https://source.android.com/compatibility/11/android-11-cdd">the spec</a>. Unforunately this isn't a workaround if you are developing browser websockets but still good to know.
+</p>
