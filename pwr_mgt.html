@@ -1,102 +1,134 @@
+<html>
+	<head>
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-3L9MNLDBXY"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-<style>
-	.container {
-		display: grid;
-		justify-content: center;
-	}
-	.grid {
-		padding: 2em;
-		display: grid;
-		border: 1px solid rgb(0, 20, 36);
-		font-family: Roboto, Helvetica, sans-serif;
-		max-width: 600px;
-	}
-</style>
-<div class="container">
-	<div class="grid">
-		<h1>100-1000 milliseconds of latency that would not go away</h1>
-		<h3>Re: <a href="https://rachelbythebay.com/w/2020/10/14/lag/">40 milliseconds of latency that just would not go away</a></h3>
-		<p>
-		Have you ever tried to optimize a system but found it just would not get any more consistent a side from a specific scenario? Did it seem like the stuff somehow got together and decided on how they could be delivered an spectacularly inconsistent pattern, even on a local network connection?
-		</p>
-	
-		<p> 
-		This happened to me recently. I had been trying to create a remote simple game server and I had started collecting important metrics for the application for latency, load, and saturation and all of that good stuff. So I was focusing on optimizing latency to connected devices as the key metric for the server. 
-		</p>
-	
-		<p>
-		Upon doing that, I noticed that only specific devices would ping back consistently in less than 100 milliseconds, even if they were only the same network connection. The mysterious inconsistency kept appearing: 100 ms here, 500 ms there. No matter what I did, it would not go away.
-		</p>
-	
-		<p>
-		Going back to basics lead me in the wrong direction but eventually turned up the solution. Ping my desktop from my laptop, 5 ms average. Fantastic. Ping my laptop from my desktop, 500 ms average. Uh oh. It was then I had a lesson on <a href="https://dot11zen.blogspot.com/2018/02/80211-power-management-with-packet.html">802.11 power saving</a>.
-		</p>
-	
-		<p>
-		Oh yeah. Have you ever looked at 802.11 packets and noticed a PWR MGT flag? That's why. When that flag is enabled, the station goes to sleep and messages are queued on your router. When the station wakes up, the router sends all of the queued messages so that your device doesn't have to maintain a connection. Unfortunately, in order to actually gather this up, it adds a certain amount of delay before flushing data to the device.
-		</p>
-	
-		<p>
-		In this case, the interval when packets were pulled was a factor of the router beacon interval which is 100ms. In the name of keeping things running as quickly as possible, I'm planning on just sending a packet every 200ms to effectively negate the power saving feature in the name of latency.
-		</p>
-	
-		<p>
-		Stuff like this just proves that you should always be checking your assumptions and trusting abstractions sometimes bites back.
-		</p>
-	
-		<p>
-		Incidentally, if this kind of thing matters to you, I would suggest trying to capture 802.11 packets in Wireshark and playing around. There are a lot more flags and a lot protocols I had no idea existed so you might find another scenario like this just by looking at the messages! 
-		</p>
-	
-		<p>
-		This post is a copy of <a href="https://rachelbythebay.com/w/2020/10/14/lag/">this magnificent post on rachelbythebay.com</a>. I felt like I was reliving the same experience her teammates shared and wanted to connect these stories together!
-		</p>
-	
-		<p>
-		More details on power saving mode: <a href="https://dot11zen.blogspot.com/2018/02/80211-power-management-with-packet.html">https://dot11zen.blogspot.com/2018/02/80211-power-management-with-packet.html</a>
-		</p>
-	
-		<p>
-		Note: Something interesting: the <a href="https://developer.android.com/reference/android/net/wifi/WifiManager#WIFI_MODE_FULL_LOW_LATENCY">WIFI_MODE_FULL_LOW_LATENCY</a> flag on Android basically just disables this power saving feature according to <a href="https://source.android.com/compatibility/11/android-11-cdd">the spec</a>. Unfortunately this isn't a workaround if you are developing browser websockets but still good to know.
-		</p>
-	
-		<p>	
-		Frames from Wireshark are included below to showcase the power saving behavior. The ping from my laptop to my phone took around 943.3 milliseconds.
-		</p>
-	
-		<style type="text/css">
-			table.tableizer-table {
-				font-size: 12px;
-				border: 1px solid #CCC; 
-				font-family: Arial, Helvetica, sans-serif;
-			} 
-			.tableizer-table td {
-				padding: 4px;
-				margin: 3px;
-				border: 1px solid #CCC;
+		gtag('config', 'G-3L9MNLDBXY');
+		</script>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1, min-width=600px">
+		<title>cpgeier posts</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+		<style>
+			.container {
+				display: grid;
+				grid-template-columns: 1fr auto 1fr;
+				background-color: #e8e8e8;
+				margin: 0;
 			}
-			.tableizer-table th {
-				background-color: #104E8B; 
-				color: #FFF;
+			.grid {
+				background-color: #ffffff;
+				grid-template-columns: auto;
+				color: #222222;
+				padding: 2em;
+				display: grid;
+				font-family: Roboto, Helvetica, sans-serif;
+				max-width: 600px;
+			}
+			.flagContainer{
+				position:relative;
+			}
+			.flag {
+				font-size: 60;
 				font-weight: bold;
+				position: absolute;
+				right: 0;
+				transform: translate(100%);
+				background-color: red;
+				color: #ffffff;
+				font-family: Roboto, Helvetica, sans-serif;
+			}
+			.flagText {
+				transform: rotate(90deg);
 			}
 		</style>
-		<table class="tableizer-table">
-		<thead><tr class="tableizer-firstrow"><th>Notes</th><th>No.</th><th>Time (ms)</th><th>Transmitter</th><th>Reciever</th><th>Protocol</th><th>PWR MGT</th><th>Info</th></tr></thead><tbody>
-		<tr><td>Laptop wakes up</td><td>0</td><td>-0.3</td><td>laptop</td><td>router</td><td>802.11</td><td>STA will stay up</td><td>QoS Null function (No data), SN=0, FN=0, Flags=.......T</td></tr>
-		<tr><td>Laptop sends ping request packet</td><td>1</td><td>0.0</td><td>laptop</td><td>router</td><td>ICMP</td><td>STA will stay up</td><td>Echo (ping) request  id=0x7e87, seq=1/256, ttl=64</td></tr>
-		<tr><td>Laptop starts sleep</td><td>2</td><td>100.5</td><td>laptop</td><td>router</td><td>802.11</td><td>STA will go to sleep</td><td>QoS Null function (No data), SN=0, FN=0, Flags=...P...T</td></tr>
-		<tr><td>Android wakes up, requests buffered packets</td><td>3</td><td>793.8</td><td>android</td><td>router</td><td>802.11</td><td>STA will stay up</td><td>QoS Null function (No data), SN=818, FN=0, Flags=.......T</td></tr>
-		<tr><td>Router sends ping request packet</td><td>4</td><td>795.7</td><td>router</td><td>android</td><td>ICMP</td><td>STA will stay up</td><td>Echo (ping) request    id=0x7e87, seq=1/256, ttl=64</td></tr>
-		<tr><td>Android sends ping reply packet</td><td>4</td><td>797.3</td><td>android</td><td>router</td><td>ICMP</td><td>STA will stay up</td><td>Echo (ping) reply    id=0x7e87, seq=1/256, ttl=64</td></tr>
-		<tr><td>Android starts sleep</td><td>5</td><td>838.4</td><td>android</td><td>router</td><td>802.11</td><td>STA will go to sleep</td><td>QoS Null function (No data), SN=819, FN=0, Flags=...P...T</td></tr>
-		<tr><td>Laptop wakes up, requests buffered packets</td><td>6</td><td>942.4</td><td>laptop</td><td>router</td><td>802.11</td><td>STA will stay up</td><td>QoS Null function (No data), SN=0, FN=0, Flags=.......T</td></tr>
-		<tr><td>Router sends ping reply packet</td><td>7</td><td>943.3</td><td>router</td><td>laptop</td><td>ICMP</td><td>STA will stay up</td><td>Echo (ping) reply    id=0x7e87, seq=1/256, ttl=64</td></tr>
-		<tr><td>Laptop starts sleep</td><td>8</td><td>1043.3</td><td>laptop</td><td>router</td><td>802.11</td><td>STA will go to sleep</td><td>QoS Null function (No data), SN=0, FN=0, Flags=...P...T</td></tr>
-		</tbody></table>
-	
-	</div>
-</div>
+	</head>
+	<body class="container">
+		<div></div>
+		<div>
+			<div class="flagContainer">
+				<div class="flag">
+					<div class="flagText">
+						00
+					</div>
+				</div>
+			</div>
+			<div class="grid">
+				<h1>100-1000 milliseconds of latency that would just not go away</h1>
+				<h3>Re: <a href="https://rachelbythebay.com/w/2020/10/14/lag/">40 milliseconds of latency that just would not go away</a></h3>
+				<p>
+				Have you ever tried to optimize a system but found it just would not get any more consistent a side from a specific scenario? Did it seem like the stuff somehow got together and decided on how they could be delivered an spectacularly inconsistent pattern, even on a local network connection?
+				</p>
+				<p> 
+				This happened to me recently. I had been trying to create a remote simple game server and I had started collecting important metrics for the application for latency, load, and saturation and all of that good stuff. So I was focusing on optimizing latency to connected devices as the key metric for the server. 
+				</p>
+				<p>
+				Upon doing that, I noticed that only specific devices would ping back consistently in less than 100 milliseconds, even if they were only the same network connection. The mysterious inconsistency kept appearing: 100 ms here, 500 ms there. No matter what I did, it would not go away.
+				</p>
+				<p>
+				Going back to basics lead me in the wrong direction but eventually turned up the solution. Ping my desktop from my laptop, 5 ms average. Fantastic. Ping my laptop from my desktop, 500 ms average. Uh oh. It was then I had a lesson on <a href="https://dot11zen.blogspot.com/2018/02/80211-power-management-with-packet.html">802.11 power saving</a>.
+				</p>
+				<p>
+				Oh yeah. Have you ever looked at 802.11 packets and noticed a PWR MGT flag? That's why. When that flag is enabled, the station goes to sleep and messages are queued on your router. When the station wakes up, the router sends all of the queued messages so that your device doesn't have to maintain a connection. Unfortunately, in order to actually gather this up, it adds a certain amount of delay before flushing data to the device.
+				</p>
+				<p>
+				In this case, the interval when packets were pulled was a factor of the router beacon interval which is 100ms. In the name of keeping things running as quickly as possible, I'm planning on just sending a packet every 200ms to effectively negate the power saving feature in the name of latency.
+				</p>
+				<p>
+				Stuff like this just proves that you should always be checking your assumptions and trusting abstractions sometimes bites back.
+				</p>
+				<p>
+				Incidentally, if this kind of thing matters to you, I would suggest trying to capture 802.11 packets in Wireshark and playing around. There are a lot more flags and a lot protocols I had no idea existed so you might find another scenario like this just by looking at the messages! 
+				</p>
+				<p>
+				This post is a copy of <a href="https://rachelbythebay.com/w/2020/10/14/lag/">this magnificent post on rachelbythebay.com</a>. I felt like I was reliving the same experience her teammates shared and wanted to connect these stories together!
+				</p>
+				<p>
+				More details on power saving mode: <a href="https://dot11zen.blogspot.com/2018/02/80211-power-management-with-packet.html">https://dot11zen.blogspot.com/2018/02/80211-power-management-with-packet.html</a>
+				</p>
+				<p>
+				Note: Something interesting: the <a href="https://developer.android.com/reference/android/net/wifi/WifiManager#WIFI_MODE_FULL_LOW_LATENCY">WIFI_MODE_FULL_LOW_LATENCY</a> flag on Android basically just disables this power saving feature according to <a href="https://source.android.com/compatibility/11/android-11-cdd">the spec</a>. Unfortunately this isn't a workaround if you are developing browser websockets but still good to know.
+				</p>
+				<p>	
+				Frames from Wireshark are included below to showcase the power saving behavior. The ping from my laptop to my phone took around 943.3 milliseconds.
+				</p>
+				<style type="text/css">
+					table.tableizer-table {
+						font-size: 12px;
+						border: 1px solid #CCC; 
+					} 
+					.tableizer-table td {
+						padding: 4px;
+						margin: 3px;
+						border: 1px solid #CCC;
+					}
+					.tableizer-table th {
+						background-color: #104E8B; 
+						color: #FFF;
+						font-weight: bold;
+					}
+				</style>
+				<table class="tableizer-table">
+				<thead><tr class="tableizer-firstrow"><th>Notes</th><th>No.</th><th>Time (ms)</th><th>Transmitter</th><th>Reciever</th><th>Protocol</th><th>PWR MGT</th><th>Info</th></tr></thead><tbody>
+				<tr><td>Laptop wakes up</td><td>0</td><td>-0.3</td><td>laptop</td><td>router</td><td>802.11</td><td>STA will stay up</td><td>QoS Null function (No data), SN=0, FN=0, Flags=.......T</td></tr>
+				<tr><td>Laptop sends ping request packet</td><td>1</td><td>0.0</td><td>laptop</td><td>router</td><td>ICMP</td><td>STA will stay up</td><td>Echo (ping) request  id=0x7e87, seq=1/256, ttl=64</td></tr>
+				<tr><td>Laptop starts sleep</td><td>2</td><td>100.5</td><td>laptop</td><td>router</td><td>802.11</td><td>STA will go to sleep</td><td>QoS Null function (No data), SN=0, FN=0, Flags=...P...T</td></tr>
+				<tr><td>Android wakes up, requests buffered packets</td><td>3</td><td>793.8</td><td>android</td><td>router</td><td>802.11</td><td>STA will stay up</td><td>QoS Null function (No data), SN=818, FN=0, Flags=.......T</td></tr>
+				<tr><td>Router sends ping request packet</td><td>4</td><td>795.7</td><td>router</td><td>android</td><td>ICMP</td><td>STA will stay up</td><td>Echo (ping) request    id=0x7e87, seq=1/256, ttl=64</td></tr>
+				<tr><td>Android sends ping reply packet</td><td>4</td><td>797.3</td><td>android</td><td>router</td><td>ICMP</td><td>STA will stay up</td><td>Echo (ping) reply    id=0x7e87, seq=1/256, ttl=64</td></tr>
+				<tr><td>Android starts sleep</td><td>5</td><td>838.4</td><td>android</td><td>router</td><td>802.11</td><td>STA will go to sleep</td><td>QoS Null function (No data), SN=819, FN=0, Flags=...P...T</td></tr>
+				<tr><td>Laptop wakes up, requests buffered packets</td><td>6</td><td>942.4</td><td>laptop</td><td>router</td><td>802.11</td><td>STA will stay up</td><td>QoS Null function (No data), SN=0, FN=0, Flags=.......T</td></tr>
+				<tr><td>Router sends ping reply packet</td><td>7</td><td>943.3</td><td>router</td><td>laptop</td><td>ICMP</td><td>STA will stay up</td><td>Echo (ping) reply    id=0x7e87, seq=1/256, ttl=64</td></tr>
+				<tr><td>Laptop starts sleep</td><td>8</td><td>1043.3</td><td>laptop</td><td>router</td><td>802.11</td><td>STA will go to sleep</td><td>QoS Null function (No data), SN=0, FN=0, Flags=...P...T</td></tr>
+				</tbody></table>
+			</div>
+		</div>
+		<div></div>
+	</body>
+</html>
