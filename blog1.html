@@ -44,6 +44,10 @@
   Note: Something interesting: the <a href="https://developer.android.com/reference/android/net/wifi/WifiManager#WIFI_MODE_FULL_LOW_LATENCY">WIFI_MODE_FULL_LOW_LATENCY</a> flag on Android basically just disables this power saving feature according to <a href="https://source.android.com/compatibility/11/android-11-cdd">the spec</a>. Unforunately this isn't a workaround if you are developing browser websockets but still good to know.
 </p>
 
+<p>	
+  Frames from Wireshark are included below to showcase the power saving behavior. The ping from my laptop to my phone took around 943.3 milliseconds.
+</p>
+
 <style type="text/css">
 	table.tableizer-table {
 		font-size: 12px;
@@ -60,8 +64,6 @@
 		color: #FFF;
 		font-weight: bold;
 	}
-  
-Frames from Wireshark are included below to showcase the power saving behavior. The ping from my laptop to my phone took around 943.3 milliseconds.
 </style>
 <table class="tableizer-table">
 <thead><tr class="tableizer-firstrow"><th>Notes</th><th>No.</th><th>Time (ms)</th><th>Transmitter</th><th>Reciever</th><th>Protocol</th><th>PWR MGT</th><th>Info</th></tr></thead><tbody>
