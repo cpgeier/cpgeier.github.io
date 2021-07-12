@@ -1,20 +1,74 @@
-<style>
-	.container {
-		display: grid;
-		justify-content: center;
-	}
-	.grid {
-		padding: 2em;
-		display: grid;
-		border: 1px solid rgb(0, 20, 36);
-		font-family: Roboto, Helvetica, sans-serif;
-		max-width: 600px;
-	}
-</style>
+<html>
+	<head>
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-3L9MNLDBXY"></script>
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
 
-<div class="container">
-    <div class="grid">
-        <h1> Posts: </h1>
-        <a href="/pwr_mgt.html">100-1000 milliseconds of latency that would not go away</a>
-    </div>
-</div>
+		gtag('config', 'G-3L9MNLDBXY');
+		</script>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1, min-width=600px">
+		<title>cpgeier posts</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+		<style>
+			.container {
+				display: grid;
+				grid-template-columns: 1fr auto 1fr;
+				background-color: #e8e8e8;
+				margin: 0;
+			}
+			.grid {
+				background-color: #ffffff;
+				grid-template-columns: auto;
+				color: #222222;
+				padding: 2em;
+				display: grid;
+				font-family: Roboto, Helvetica, sans-serif;
+				max-width: 600px;
+			}
+			.flagContainer{
+				position:relative;
+			}
+			.flag {
+				font-size: 60;
+				font-weight: bold;
+				position: absolute;
+				right: 0;
+				transform: translate(100%);
+				background-color: red;
+				color: #ffffff;
+				font-family: Roboto, Helvetica, sans-serif;
+			}
+			.flagText {
+				transform: rotate(90deg);
+			}
+		</style>
+	</head>
+	<body class="container">
+		<div></div>
+		<div>
+			<div class="flagContainer">
+				<div class="flag">
+					<div class="flagText">
+						00
+					</div>
+				</div>
+			</div>
+            <div class="grid">
+                <h1> Posts: </h1>
+                <h3>2021 June</h3>
+                <ul>
+                    <li>
+                        <a href="/pwr_mgt.html">100-1000 milliseconds of latency that would not go away</a>
+                    </li>
+                </ul>
+            </div>
+		</div>
+		<div></div>
+	</body>
+</html>
